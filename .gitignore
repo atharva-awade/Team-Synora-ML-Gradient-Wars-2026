@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and large precomputed data
+cache/
+*.parquet
+*.feather
+*.pkl
+*.npy
+*.npz
+
+# Model checkpoints & temporary output folders
+checkpoints*/
+out_colab*/
+*.pth
+*.pt
+*.onnx
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE / Editor configuration
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local telemetry / temporary dashboard files
+dashboard.html
+telemetry.json
+telemetry_data.js
+daemon_telemetry_bridge.py
+
+# Local scraping & browser forensics scripts
+check_brave_hist.py
+check_chrome_hist.py
+check_edge_h4h_all.py
+fetch_edge_h4h.py
+find_browser.py
+edge_h4h_page.html
+find_v8_creation.py
+read_tlines.py
+inspect_h4h.py
+extract_h4h_info.py
+
+# Internal strategy markdown docs (keep ONLY README.md as requested)
+PINNACLE_MASTER_PLAN_TO_RANK_1.md
+RECENT_ADVANCEMENTS_AND_BREAKTHROUGHS.md
+
+# Large CSV submissions (keep only the final verified submission)
+submissions/*.csv
+!submissions/submission_synora_resilient_aligned_peak.csv

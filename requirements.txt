@@ -1,0 +1,23 @@
+# Core numeric and tabular processing
+numpy>=1.24.0
+pandas>=2.0.0
+polars>=0.20.0
+pyarrow>=14.0.0
+scipy>=1.10.0
+
+# Machine learning & gradient boosting
+scikit-learn>=1.3.0
+lightgbm>=4.0.0
+catboost>=1.2.0
+xgboost>=2.0.0
+
+# Deep learning & GPU acceleration
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Graph & network analysis
+networkx>=3.0
+
+# Progress and utilities
+tqdm>=4.65.0
+jupyter>=1.0.0
