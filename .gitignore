@@ -57,3 +57,7 @@ RECENT_ADVANCEMENTS_AND_BREAKTHROUGHS.md
 # Large CSV submissions (keep only the final verified submission)
 submissions/*.csv
 !submissions/submission_synora_resilient_aligned_peak.csv
+
+# Background sprint logs
+master_sprints_continuous_engine.py
+sprints_progress.log
