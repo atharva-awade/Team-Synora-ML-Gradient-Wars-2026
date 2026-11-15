@@ -15,12 +15,7 @@ EXPECTED_TEST_COUNTS = {
     'loan_app_extortion': 330,
 }
 
-import os
-
-sub_path = os.path.join('submissions', 'submission_sprint3_crown_063.csv')
-if not os.path.exists(sub_path):
-    sub_path = r'D:\ML Gradient Gemini\submissions\submission_sprint3_crown_063.csv'
-sub = pd.read_csv(sub_path)
+sub = pd.read_csv(r'D:\ML Gradient Gemini\submissions\submission_sprint3_crown_063.csv')
 actual = sub['label'].value_counts()
 
 print(f"{'Label':<22} | {'Sprint 3 (0.5054)':<18} | {'True Expected':<14} | {'Difference':<12} | {'Coverage Ratio':<15}")
@@ -30,3 +25,4 @@ for l, exp in EXPECTED_TEST_COUNTS.items():
     diff = act - exp
     ratio = act / exp
     print(f"{l:<22} | {act:<18} | {exp:<14} | {diff:+12} | {ratio:<15.1%}")
+

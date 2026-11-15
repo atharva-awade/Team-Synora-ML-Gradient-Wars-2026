@@ -58,6 +58,23 @@ RECENT_ADVANCEMENTS_AND_BREAKTHROUGHS.md
 submissions/*.csv
 !submissions/submission_synora_resilient_aligned_peak.csv
 !submissions/submission_sprint3_crown_063.csv
+!submissions/submission_synora_emperor_crown_no1.csv
 
 # Runtime logs
 sprints_progress.log
+
+# Ad-hoc intermediate analysis scripts
+analyze_*.py
+check_bot_*.py
+check_mule_*.py
+inspect_class_*.py
+inspect_mid_*.py
+inspect_ratios*.py
+inspect_test_*.py
+profile_typologies.py
+test_hierarchical_thresholds.py
+test_starter_balanced.py
+test_two_stage.py
+test_w0.py
+tune_fast_thresholds.py
+verify_rules.py
