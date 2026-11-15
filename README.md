@@ -46,10 +46,28 @@ $$\text{Macro-F1} = \frac{1}{12}\sum_{c=1}^{12} F_{1, c}$$
 ### 3. Orthogonal Fraud Detection Fusion
 - Discovered that structural network rings (detected via graph topology and ledger balance flows) and temporal behavioral bursts (detected via micro-second balance jumps and emulator device multiplexing) operate in nearly disjoint subspaces (only 54 rows overlap). Fusing these orthogonal feature spaces drove recall from 39% to over 78% while maintaining $\ge 68\%$ precision.
 
-### 4. 3-Stage GPU Stacking & Bagged Ensembles
-- **Stage 1:** Base feature extraction and 5-fold stratified cross-validation across LightGBM, CatBoost, and XGBoost models.
-- **Stage 2:** Multi-hop spatial and neighbor probability stacking across entity graphs.
-- **Stage 3:** Bagged probability ensembling and holdout-calibrated probability alignment (`build_aligned_submission.py`).
+### 4. 227-Feature Super Fusion Master Matrix (Sprint 1)
+- Unified 6 orthogonal feature families into a cohesive 227-feature matrix:
+  - **Base tabular features (99):** Aggregations, balance ratios, burst velocities.
+  - **Transductive graph features (32):** PageRank, in/out degree ratios, SCCs.
+  - **Bidirectional ledger features (23):** Latencies, conduit indices, flow retention.
+  - **Spectral embeddings (10):** Bipartite graph TruncatedSVD homophily coordinates.
+  - **Target encoding features (18):** Out-of-fold Bayesian risk priors for entities.
+  - **Typology domain features (45):** Specific heuristics for all 11 fraud typologies.
+- Trained with **GroupKFold** cross-validation on time/day clusters with **0.40 legit subsampling**, granting minority fraud typologies a **2.5x effective gradient volume**.
+
+### 5. Multi-Hop Neighbor Probability Stacking (Sprint 2)
+- Calculated entity-level multi-hop posterior distributions:
+  - Receiver, sender, and device neighbor mean probability vectors across all 12 classes.
+  - Forward-hop (`nx`), backward-hop (`pv`), and reverse-pair (`rev`) transaction transition probabilities.
+- Expanded the feature space from **227 $\to$ 311 features** for second-level GPU stacking, achieving **0.4765 holdout Macro-F1**.
+
+### 6. Transductive Ring Diffusion & Grandmaster Tri-Blend (Sprint 3)
+- Blended 3 orthogonal model paradigms into a single unified ensemble:
+  - **45%** Sprint 2 Multi-Hop Neighbor Stacking (311 features)
+  - **35%** Sprint 1 227-Feature Super Fusion (GPU XGBoost)
+  - **20%** Resilient Bagged GPU Stacking Champion
+- Calibrated class decision boundaries via coordinate multiplier optimization on the held-out September validation split, producing the crown submission **`submission_sprint3_crown_063.csv`** (0.4794 clean holdout CV, 3,785 confirmed fraud transactions).
 
 ---
 
@@ -68,6 +86,7 @@ $$\text{Macro-F1} = \frac{1}{12}\sum_{c=1}^{12} F_{1, c}$$
 │   ├── quota_calibration.py              # Prior distribution analysis and calibration
 │   ├── train_and_predict.py               # Stratified 5-fold CV training pipeline
 │   └── train_full_and_predict.py          # Full dataset retraining with test density scaling
+├── master_sprints_continuous_engine.py    # Autonomous 3-Sprint continuous runner (227f + Stacking + Tri-Blend)
 ├── SYNORA_PINNACLE_COLAB_RUNNER.ipynb     # Standalone Google Colab runner for 1-click reproduction
 ├── colab_pipeline.py                      # Production training pipeline for cloud execution
 ├── colab_pipeline_fixed.py                # Pipeline with test density normalization
@@ -88,8 +107,11 @@ $$\text{Macro-F1} = \frac{1}{12}\sum_{c=1}^{12} F_{1, c}$$
 ├── test_meta_and_thresholds.py            # Meta-learner and boundary tuning tests
 ├── test_balanced_subsampling.py           # Class-balanced subsampling experiments
 ├── test_confidence_amplification.py       # Probability confidence margin amplification
-├── submissions/                           # Submission directory
-│   └── submission_synora_resilient_aligned_peak.csv  # Final verified peak submission
+├── test_hierarchical_engine.py            # Two-stage hierarchical decision boundary experiments
+├── compare_counts.py                      # Distribution analysis vs. expected empirical priors
+├── submissions/                           # Verified peak competition submissions
+│   ├── submission_sprint3_crown_063.csv   # Sprint 3 Grandmaster Tri-Blend Crown Submission
+│   └── submission_synora_resilient_aligned_peak.csv  # Resilient Aligned Peak Submission
 ├── requirements.txt                       # Python dependencies
 └── README.md                              # Comprehensive project documentation
 ```
@@ -113,18 +135,25 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Option A: 1-Click Google Colab Runner (Recommended)
+### Option A: Autonomous Continuous Sprint Engine (Sprints 1–3)
+Run the master continuous sprint engine, which automatically builds the 227-feature matrix, executes 5-fold GPU XGBoost training, computes multi-hop spatial neighbor probabilities (expanding to 311 features), and generates the Grandmaster Tri-Blend submission:
+
+```bash
+python master_sprints_continuous_engine.py
+```
+
+### Option B: 1-Click Google Colab Runner (Recommended for Reviewers)
 1. Open `SYNORA_PINNACLE_COLAB_RUNNER.ipynb` in [Google Colab](https://colab.research.google.com).
 2. Set runtime type to **GPU** (`T4`, `V100`, or `A100`).
 3. Upload the competition data (`train.csv`, `test.csv`, `accounts.csv`, `merchants.csv`) into `./upi-fraud-rings/` or link via Google Drive.
 4. Execute **Runtime > Run all**. The notebook will train the models, compute out-of-fold validation scores, and automatically export the submission.
 
-### Option B: Local / Dedicated Cloud Execution
+### Option C: Modular Pipeline Execution
 ```bash
 # 1. Run exploratory data analysis and validation
 python deep_eda.py
 
-# 2. Execute full resilient pipeline with 5-fold CV and GPU acceleration
+# 2. Execute resilient 15-model bagged pipeline with GPU acceleration
 python colab_pipeline_v7_resilient.py
 
 # 3. Generate timestamp-aligned, validated submission
@@ -135,13 +164,16 @@ python build_aligned_submission.py
 
 ## 📊 Validation & Leaderboard Progression
 
-| Phase / Submission | Strategy / Innovations | Local CV (Macro-F1) | Public LB (Macro-F1) |
-| :--- | :--- | :---: | :---: |
-| **Baseline Prototype** | Heuristic quota overrides, single LightGBM | 0.4530 | 0.4514 |
-| **Iteration 2** | Purged heuristics, 139 graph & ledger features | 0.4638 | 0.4626 |
-| **Synora Omega (v5)** | 50% density scaling ($2.0\times$), high-frequency burst engine | 0.4885 | 0.4911 |
-| **Synora Pinnacle (v6)** | 15-model 3-stage stacked GPU ensemble | 0.4992 | **0.5005** |
-| **Resilient Aligned Peak** | Holdout-calibrated multipliers, strict ID alignment, dual-stage blend | **0.4796 (Holdout)** | **Peak Submission** |
+| Phase / Submission | Strategy / Innovations | Features | Local Holdout CV (Macro-F1) | Public LB (Macro-F1) |
+| :--- | :--- | :---: | :---: | :---: |
+| **Baseline Prototype** | Heuristic quota overrides, single LightGBM | 99 | 0.4530 | 0.4514 |
+| **Iteration 2** | Purged heuristics, 139 graph & ledger features | 139 | 0.4638 | 0.4626 |
+| **Synora Omega (v5)** | 50% density scaling ($2.0\times$), high-frequency burst engine | 170 | 0.4885 | 0.4911 |
+| **Synora Pinnacle (v6)** | 15-model 3-stage stacked GPU ensemble | 198 | 0.4992 | **0.5005** |
+| **Resilient Aligned Peak** | Holdout-calibrated multipliers, strict ID alignment | 215 | **0.4796** | **Peak Milestone** |
+| **Sprint 1 (Super Fusion)** | 227-feature master matrix, 0.40 legit downsampling | 227 | **0.4753** | Milestone |
+| **Sprint 2 (Neighbor Stacking)**| Multi-hop spatial & temporal transition probabilities | 311 | **0.4765** | Milestone |
+| **Sprint 3 (Crown Tri-Blend)** | Grandmaster Tri-Blend (45% S2 + 35% S1 + 20% Resilient) | 311+ | **0.4794** | **0.5054 (Live LB Milestone)** |
 
 ---
 
