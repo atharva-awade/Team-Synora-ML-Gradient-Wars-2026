@@ -54,10 +54,10 @@ extract_h4h_info.py
 PINNACLE_MASTER_PLAN_TO_RANK_1.md
 RECENT_ADVANCEMENTS_AND_BREAKTHROUGHS.md
 
-# Large CSV submissions (keep only the final verified submission)
+# Large CSV submissions (keep only verified peak submissions)
 submissions/*.csv
 !submissions/submission_synora_resilient_aligned_peak.csv
+!submissions/submission_sprint3_crown_063.csv
 
-# Background sprint logs
-master_sprints_continuous_engine.py
+# Runtime logs
 sprints_progress.log
